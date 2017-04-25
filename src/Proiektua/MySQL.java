@@ -112,7 +112,7 @@ public class MySQL {
 		}
 	}
 	
-	public void kotxaBerriaSartu(String pMatrikula, String pMarka, int pEgunPrezioa, String pEgoera,
+	public void kotxeBerriaSartu(String pMatrikula, String pMarka, int pEgunPrezioa, String pEgoera,
 								int pAteKopurua, boolean pAireEgokitua, int pDepositoa,
 								String pKarburanteMota){
 		try{
@@ -243,19 +243,93 @@ public class MySQL {
 			JOptionPane.showMessageDialog(null, "Zure kreditua ezin izan da gehitu. Barkatu eragozpenak.");
 			}
 	}      
-	
+   
 	public void bezeroakKotxeaGasolindegiraEraman(String kodea, String matrikula, int karburanteKop){
-		try{
-			String Query="";
-		}catch (SQLException ex){
-			
+        int prezioa=0,kreditua=0,depositoa=0,karbKop=0;
+		String karbMota="Ezezaguna",errorea="Ezer";
+        boolean denaOndo=true;
+		
+		String Query="MySQL-rako komandoak";
+        Statement st = null;
+        java.sql.ResultSet resultSet;
+		
+        //Bezeroa========================================================
+		try {
+            Query = "SELECT * FROM BEZERO" +
+							" WHERE KODEA=" + kodea+ ";";
+            st = (Statement) Conexion.createStatement();
+            resultSet = ((java.sql.Statement) st).executeQuery(Query);
+            
+            kreditua=resultSet.getInt("KREDITUA");
+ 
+        } catch (SQLException ex) {
+            errorea="Ez da bezeroa aurkitu";
+            denaOndo=false;
+        }
+	
+		//Kotxea==========================================================
+		if(denaOndo){
+			try {
+	            Query = "SELECT * FROM KOTXE" +	//Kotxearen infoa lortu
+								" WHERE MATRIKULA=" + matrikula+ ";";
+	            st = (Statement) Conexion.createStatement();
+	            resultSet = ((java.sql.Statement) st).executeQuery(Query);
+
+	            depositoa=resultSet.getInt("DEPOSITOA");
+	            karbKop=resultSet.getInt("KARBURANTEKOP");
+	            karbMota=resultSet.getString("KARBURANTEMOTA");
+	 
+	        } catch (SQLException ex) {
+	        	errorea="Ez da kotxea aurkitu";
+	            denaOndo=false;
+	        }
 		}
+		
+		//Karburantea========================================================
+		if(denaOndo){
+			try {
+	            Query = "SELECT * FROM KARBURANTEMOTA" +
+								" WHERE IZENA=" + karbMota+ ";";
+	            st = (Statement) Conexion.createStatement();
+	            resultSet = ((java.sql.Statement) st).executeQuery(Query);
+	
+	            prezioa=depositoa-karbKop * resultSet.getInt("PREZIOA"); //Prezioa kalkulatu
+	            
+	        } catch (SQLException ex) {
+	        	errorea="Ez da karburantea aurkitu";
+	            denaOndo=false;
+	        }
+		}
+		//Dirua Aldatu========================================================
+		if(denaOndo){
+			if(kreditua>=prezioa){
+				try {
+					Query="UPDATE BEZEROA SET KREDITUA=" + (kreditua-prezioa) +
+							" WHERE KODEA=" + kodea+ ";";
+		            st = (Statement) Conexion.createStatement();
+		            resultSet = ((java.sql.Statement) st).executeQuery(Query);
+		            
+		        } catch (SQLException ex) {
+		        	errorea="Ezin izan da dirua aldatu";
+		            denaOndo=false;
+		        }
+				
+				try {
+					Query="UPDATE KOTXE SET KARBURANTEKOP=" + depositoa +
+							" WHERE MATRIKULA=" + matrikula+ ";";
+		            resultSet = ((java.sql.Statement) st).executeQuery(Query);
+		            
+		        } catch (SQLException ex) {
+		        	errorea="Ezin izan da karburantea aldatu";
+		            denaOndo=false;
+		        }
+			}else errorea="Ez du diru nahikorik";			
+		}
+		if(!denaOndo){	JOptionPane.showMessageDialog(null,errorea);}
 	}
+}
 
 	//public void insert
 	//public void getValues
 	//public void deleteRecord
-	
-	
-	
-}
+

@@ -2,9 +2,11 @@ package Proiektua;
 
 import java.beans.Statement;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -62,30 +64,193 @@ public class MySQL {
 		}
 	}*/
 
+	//BIHAR GALDETU
+	public int binary (boolean egoera){
+		int emaitza=0;
+		if (egoera){
+			emaitza=1;
+		}
+		return emaitza;
+	}
 	
+	//BIHAR GALDETU
+	public int kodeaSortu(){
+		Random random = new Random();
+		int kodea = random.nextInt(999999998)+1;
+		return kodea;
+	}
 
-	public void bezeroBerriaSartu(String table_name, int kodea, String pasahitza, String izena,
-			String abizena, String helbidea, boolean egoera, DateFormat noiztik, int kreditua){
+	
+	/************ADMINISTRATZAILEAREN ZATIA************/
+	
+	public void bezeroBerriaSartu(String pasahitza, String izena,
+			String abizena, String helbidea, int kreditua){
 		try{
-			String Query = "INSERT INTO " + table_name + "VALUES("
-					+"\"" + kodea + "\" , "
-					+"\"" + pasahitza + "\" , "
-					+ "\"" + izena + "\" , "
-					+ "\"" + abizena + "\" , "
-					+ "\"" + helbidea + "\", "
-					+ "\"" + egoera + "\" , "
-					+ "\"" + noiztik +"\", "
-					+"\"" + kreditua + "\")";
+			String Query = "INSERT INTO " + "BEZEROA" + "VALUES" +
+					"(" + kodeaSortu() + ", " +"\"" +pasahitza+"\"" + ", " + 
+					"\"" + izena + "\"" + " ," + "\"" + abizena + "\"" +
+					", " + "\"" + helbidea + "\"" + ", " + binary(true) + DateFormat.getTimeInstance() 
+					+ ", " +kreditua + ");";
 			Statement st =  (Statement) Conexion.createStatement();
-			st.executeUpdate(Query);
+			((java.sql.Statement) st).executeUpdate(Query);
 			JOptionPane.showMessageDialog(null, "Bezero erabiltzailea ondo sortu da.");
 		}catch(SQLException ex){
 			JOptionPane.showMessageDialog(null, "Erabiltzaile berria sortzean errore bat gertatu da. Barkatu eragozpenak.");
 		}
 	}
-
 	
+	//BIHAR GALDETU!!!!!
+	public void BezeroBatenEgoeraAldatu(int pKodea){
+		try{
+			String Query= "UPDATE BEZEROA SET EGOERA= NOT (EGOERA)"  + 
+					" WHERE KODEA=" + pKodea+ ";";
+			Statement st =  (Statement) Conexion.createStatement();
+			((java.sql.Statement) st).executeUpdate(Query);
+			JOptionPane.showMessageDialog(null, pKodea + " duen bezeroa bajan eman da");
+		}catch(SQLException ex){
+			JOptionPane.showMessageDialog(null, pKodea + "duen bezeroa ezin izan da bajan eman. Barkatu eragozpenak.");
+		}
+	}
 	
+	public void kotxaBerriaSartu(String pMatrikula, String pMarka, int pEgunPrezioa, String pEgoera,
+								int pAteKopurua, boolean pAireEgokitua, int pDepositoa,
+								String pKarburanteMota){
+		try{
+			String Query = "INSERT INTO " + "KOTXEA" + "VALUES("
+					+ "\"" + pMatrikula + "\", " + "\"" + pMarka + "\", " +
+					pEgunPrezioa + "\", " + "\"" + pEgoera + "\", " +
+					pAteKopurua + ", " + binary(pAireEgokitua) + ", " + pDepositoa +
+					", " + pDepositoa + ", " + DateFormat.getTimeInstance() + ", " + 
+					"\"" + pKarburanteMota + "\");";
+			Statement st =  (Statement) Conexion.createStatement();
+			((java.sql.Statement) st).executeUpdate(Query);
+			JOptionPane.showMessageDialog(null, "Kotxea Datu Basean ondo sartu da.");
+		}catch(SQLException ex){
+			JOptionPane.showMessageDialog(null, "Kotxea gure Datu Basean sartzean arazo bat sortu da. Barkatu eragozpenak.");
+		}
+	}
+	
+	public void kotxeBatiBajaEman (String pMatrikula){
+		try{
+			String Query = "DELETE FROM KOTXEA WHERE MATRIKULA=" + "\"" + pMatrikula +"\";";
+			Statement st = (Statement) Conexion.createStatement();
+			((java.sql.Statement) st).executeQuery(Query);
+			JOptionPane.showMessageDialog(null, "Kotxea datu basetik ondo ezabatu da.");
+		}catch(SQLException ex){
+			JOptionPane.showMessageDialog(null,"Sartutako kotxearen matrikularekin errore bat gertatu da eta ezin izan da Kotxea datu basetik ezabatu.");
+		}
+	}
+	
+	public void karburanteGutxikoKotxeakIkusi(){
+		try{
+			String Query = "SELECT MATRIKULA FROM KOTXEA WHERE "
+					+ "KARBURANTEA <(DEPOSITOA*0.2);";
+			Statement st = (Statement) Conexion.createStatement();
+			((java.sql.Statement) st).executeQuery(Query);
+			JOptionPane.showMessageDialog(null, "%20 baino gutxiago duten kotxeak hauek dira");
+		}catch(SQLException ex){
+			JOptionPane.showMessageDialog(null,"Kontsultarekin errore bat gertatu da.");
+		}
+	}
+	
+	//BIHAR GALDETU
+	public void kotxeaGasolindegiraEraman(String pMatrikula){
+		try{
+			String Query = "UPDATE KOTXEA SET KARBURANTEKOP=DEPOSITOA"
+					+ " WHERE MATRIKULA=" + pMatrikula;
+			Statement st = (Statement) Conexion.createStatement();
+			((java.sql.Statement) st).executeQuery(Query);
+			JOptionPane.showMessageDialog(null, pMatrikula + "duen kotxea gasolindegira eraman da eta depositoa guztiz bete da.");
+		}catch(SQLException ex){
+			JOptionPane.showMessageDialog(null, "Barkatu baina " + pMatrikula + " kotxea duen matrikula ezin izan da gasolindegira eraman.");
+		}
+	
+	}
+	
+	/**********BEZEROAREN ZATIA**************/
+	
+	public void datuPertsonalakAldatu(String kodea, String pasahitza, String helbidea, String izena, String abizena){
+		if (pasahitza!=null){
+			pasahitzaAldatu(kodea, pasahitza);
+		}
+		if (helbidea!=null){
+			helbideaAldatu(kodea, helbidea);
+		}
+		if (izena!=null){
+			izenaAldatu(kodea, izena);
+		}
+		if (abizena!=null){
+			abizenaAldatu(kodea, abizena);
+		}
+	}
+	
+	public void pasahitzaAldatu(String kodea, String pasahitza){
+		try{
+			String Query = "UPDATE BEZEROA SET PASAHITZA=" + pasahitza +
+					" WHERE KODEA=" + kodea + ";";
+			Statement st = (Statement) Conexion.createStatement();
+			((java.sql.Statement) st).executeQuery(Query);
+			JOptionPane.showMessageDialog(null,  "Zure pasahitza ondo aldatu da.");
+		}catch(SQLException ex){
+			JOptionPane.showMessageDialog(null, "Zure pasahitza ezin izan da aldatu. Barkatu eragozpenak.");
+		}
+	}
+	
+	public void helbideaAldatu(String kodea, String helbidea){
+		try{
+			String Query = "UPDATE BEZEROA SET HELBIDEA=" + helbidea +
+					" WHERE KODEA=" + kodea + ";";
+			Statement st = (Statement) Conexion.createStatement();
+			((java.sql.Statement) st).executeQuery(Query);
+			JOptionPane.showMessageDialog(null,  "Zure helbidea ondo aldatu da.");
+		}catch(SQLException ex){
+			JOptionPane.showMessageDialog(null, "Zure helbidea ezin izan da aldatu. Barkatu eragozpenak.");
+		}
+	}
+	
+	public void izenaAldatu(String kodea, String izena){
+		try{
+			String Query = "UPDATE BEZEROA SET IZENA=" + izena +
+					" WHERE KODEA=" + kodea + ";";
+			Statement st = (Statement) Conexion.createStatement();
+			((java.sql.Statement) st).executeQuery(Query);
+			JOptionPane.showMessageDialog(null,  "Zure izena ondo aldatu da.");
+		}catch(SQLException ex){
+			JOptionPane.showMessageDialog(null, "Zure izena ezin izan da aldatu. Barkatu eragozpenak.");
+		}
+	}
+	
+	public void abizenaAldatu(String kodea, String abizena){
+		try{
+			String Query = "UPDATE BEZEROA SET ABIZENA=" + abizena +
+					" WHERE KODEA=" + kodea + ";";
+			Statement st = (Statement) Conexion.createStatement();
+			((java.sql.Statement) st).executeQuery(Query);
+			JOptionPane.showMessageDialog(null,  "Zure abizena ondo aldatu da.");
+		}catch(SQLException ex){
+			JOptionPane.showMessageDialog(null, "Zure abizena ezin izan da aldatu. Barkatu eragozpenak.");
+			}
+		}
+	
+	public void kredituGehitu(String kodea, int kreditua){
+		try{
+			String Query="UPDATE BEZEROA SET KREDITUA=KREDITUA+" + kreditua +
+					" WHERE KODEA=" + kodea+ ";";
+			Statement st = (Statement) Conexion.createStatement();
+			((java.sql.Statement) st).executeQuery(Query);
+			JOptionPane.showMessageDialog(null,  "Zure kreditua ondo gehitu da.");
+		}catch(SQLException ex){
+			JOptionPane.showMessageDialog(null, "Zure kreditua ezin izan da gehitu. Barkatu eragozpenak.");
+			}
+	}
+	
+	public void bezeroakKotxeaGasolindegiraEraman(String kodea, String matrikula, int karburanteKop){
+		try{
+			String Query="";
+		}catch (SQLException ex){
+			
+		}
+	}
 
 	//public void insert
 	//public void getValues

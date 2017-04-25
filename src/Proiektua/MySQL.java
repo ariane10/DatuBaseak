@@ -242,7 +242,7 @@ public class MySQL {
 		}catch(SQLException ex){
 			JOptionPane.showMessageDialog(null, "Zure kreditua ezin izan da gehitu. Barkatu eragozpenak.");
 			}
-	}
+	}      
 	
 	public void bezeroakKotxeaGasolindegiraEraman(String kodea, String matrikula, int karburanteKop){
 		try{

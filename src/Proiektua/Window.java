@@ -10,6 +10,9 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.Font;
 
 public class Window extends JFrame {   //HASIERAKO LEHIOA 
 	
@@ -44,26 +47,28 @@ public class Window extends JFrame {   //HASIERAKO LEHIOA
 		setContentPane(contentPane);
 		
 		JButton btnDatuBaseraKonektatu = new JButton("Datu basera konektatu");
+		btnDatuBaseraKonektatu.setFont(new Font("Eras Medium ITC", Font.BOLD, 16));
 		
-		JButton btnBezeroBerriaSartu = new JButton("Bezero berria sartu");
+		JButton btnBezeroBerriaSartu = new JButton("Kontu berria sortu");
+		btnBezeroBerriaSartu.setFont(new Font("Eras Medium ITC", Font.BOLD, 16));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(68)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
-						.addComponent(btnBezeroBerriaSartu, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(btnDatuBaseraKonektatu, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-					.addContainerGap(185, Short.MAX_VALUE))
+					.addGap(48)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(btnBezeroBerriaSartu, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
+						.addComponent(btnDatuBaseraKonektatu, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE))
+					.addGap(39))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(33)
-					.addComponent(btnDatuBaseraKonektatu)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(btnBezeroBerriaSartu)
-					.addContainerGap(171, Short.MAX_VALUE))
+					.addGap(42)
+					.addComponent(btnDatuBaseraKonektatu, GroupLayout.PREFERRED_SIZE, 64, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(btnBezeroBerriaSartu, GroupLayout.PREFERRED_SIZE, 65, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(62, Short.MAX_VALUE))
 		);
 		contentPane.setLayout(gl_contentPane);
 	}
@@ -74,9 +79,4 @@ public class Window extends JFrame {   //HASIERAKO LEHIOA
 		//TODO
 		
 	}
-	
-	
-	
-	
-
 }

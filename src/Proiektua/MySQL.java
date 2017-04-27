@@ -256,7 +256,7 @@ public class MySQL {
         //Bezeroa========================================================
 		try {
             Query = "SELECT * FROM BEZERO" + /*Asteriskoa jartzen da bezero horren informazio osoa nahi dugulako*/
-							" WHERE KODEA=" + kodea+ ";";
+							" WHERE KODEA=" + "\"" + kodea+ "\";";
             st = (Statement) Conexion.createStatement();
             resultSet = ((java.sql.Statement) st).executeQuery(Query);
             
@@ -270,8 +270,8 @@ public class MySQL {
 		//Kotxea==========================================================
 		if(denaOndo){
 			try {
-	            Query = "SELECT * FROM KOTXE" +	//Kotxearen infoa lortu
-								" WHERE MATRIKULA=" + matrikula+ ";";
+	            Query = "SELECT * FROM KOTXEA" +	//Kotxearen infoa lortu
+								" WHERE MATRIKULA=" + "\"" + matrikula+ "\";";
 	            st = (Statement) Conexion.createStatement();
 	            resultSet = ((java.sql.Statement) st).executeQuery(Query);
 
@@ -289,11 +289,12 @@ public class MySQL {
 		if(denaOndo){
 			try {
 	            Query = "SELECT * FROM KARBURANTEMOTA" +
-								" WHERE IZENA=" + karbMota+ ";";
+								" WHERE IZENA=" + "\""+karbMota+ "\";";
 	            st = (Statement) Conexion.createStatement();
 	            resultSet = ((java.sql.Statement) st).executeQuery(Query);
-	
-	            prezioa=depositoa-karbKop * resultSet.getInt("PREZIOA"); //Prezioa kalkulatu
+	            
+	            prezioa=karburanteKop*resultSet.getInt("PREZIOA");
+	            //prezioa=depositoa-karbKop * resultSet.getInt("PREZIOA"); //Prezioa kalkulatu
 	            
 	        } catch (SQLException ex) {
 	        	errorea="Ez da karburantea aurkitu";
@@ -302,30 +303,60 @@ public class MySQL {
 		}
 		//Dirua Aldatu========================================================
 		if(denaOndo){
-			if(kreditua>=prezioa){
-				try {
-					Query="UPDATE BEZEROA SET KREDITUA=" + (kreditua-prezioa) +
-							" WHERE KODEA=" + kodea+ ";";
-		            st = (Statement) Conexion.createStatement();
-		            resultSet = ((java.sql.Statement) st).executeQuery(Query);
-		            
-		        } catch (SQLException ex) {
-		        	errorea="Ezin izan da dirua aldatu";
-		            denaOndo=false;
-		        }
-				
-				try {
-					Query="UPDATE KOTXE SET KARBURANTEKOP=" + depositoa +
-							" WHERE MATRIKULA=" + matrikula+ ";";
-		            resultSet = ((java.sql.Statement) st).executeQuery(Query);
-		            
-		        } catch (SQLException ex) {
-		        	errorea="Ezin izan da karburantea aldatu";
-		            denaOndo=false;
-		        }
-			}else errorea="Ez du diru nahikorik";			
+			if (depositoa<=karbKop+karburanteKop){
+				if(kreditua>=prezioa){
+					try {
+						Query="UPDATE BEZEROA SET KREDITUA=" + (kreditua-prezioa) +
+								" WHERE KODEA=" + kodea+ ";";
+			            st = (Statement) Conexion.createStatement();
+			            resultSet = ((java.sql.Statement) st).executeQuery(Query);
+			            
+			        } catch (SQLException ex) {
+			        	errorea="Ezin izan da dirua aldatu";
+			            denaOndo=false;
+			        }
+					
+					try {
+						Query="UPDATE KOTXE SET KARBURANTEKOP=" + karburanteKop +
+								" WHERE MATRIKULA=" + "\"" +matrikula+ "\";";
+			            resultSet = ((java.sql.Statement) st).executeQuery(Query);
+			            
+			        } catch (SQLException ex) {
+			        	errorea="Ezin izan da karburantea aldatu";
+			            denaOndo=false;
+			        }
+				}else{
+					errorea="Ez duzu diru nahikorik";	
+				}
+			}else{
+				errorea="Karburante gehigi bota nahi duozu. Depositoa txikiagoa da.";
+			}
 		}
-		if(!denaOndo){	JOptionPane.showMessageDialog(null,errorea);}
+		if(!denaOndo){JOptionPane.showMessageDialog(null,errorea);}
+			
+	}
+	
+	/*try{
+			String Query = "UPDATE BEZEROA SET ABIZENA=" + abizena +
+					" WHERE KODEA=" + kodea + ";";
+			Statement st = (Statement) Conexion.createStatement();
+			((java.sql.Statement) st).executeQuery(Query);
+			JOptionPane.showMessageDialog(null,  "Zure abizena ondo aldatu da.");
+		}catch(SQLException ex){
+			JOptionPane.showMessageDialog(null, "Zure abizena ezin izan da aldatu. Barkatu eragozpenak.");
+			}
+		}*/
+	
+	public void kotxeBatAlokatu(String matrikula, int bezeroKodea){
+		
+		try{
+			String Query="SELECT * FROM KOTXEA WHERE MATRIKULA=" +
+		"\"" + matrikula + "\";";
+		Statement st = (Statement) Conexion.createStatement();
+		((java.sql.Statement) st).executeQuery(Query);
+		}catch(SQLException ex){
+			
+		}
 	}
 }
 

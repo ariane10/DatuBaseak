@@ -336,26 +336,17 @@ public class MySQL {
 			
 	}
 	
-	/*try{
-			String Query = "UPDATE BEZEROA SET ABIZENA=" + abizena +
-					" WHERE KODEA=" + kodea + ";";
-			Statement st = (Statement) Conexion.createStatement();
-			((java.sql.Statement) st).executeQuery(Query);
-			JOptionPane.showMessageDialog(null,  "Zure abizena ondo aldatu da.");
-		}catch(SQLException ex){
-			JOptionPane.showMessageDialog(null, "Zure abizena ezin izan da aldatu. Barkatu eragozpenak.");
-			}
-		}*/
 	
-	public void kotxeBatAlokatu(String matrikula, int bezeroKodea){
-		
+	public void kotxeBatAlokatu(String matrikula, int bezeroKodea, int egunKop){
 		try{
-			String Query="SELECT * FROM KOTXEA WHERE MATRIKULA=" +
-		"\"" + matrikula + "\";";
-		Statement st = (Statement) Conexion.createStatement();
-		((java.sql.Statement) st).executeQuery(Query);
+			String Query="INSERT INTO ALOKATUTA VALUES(" +
+					"\""+matrikula+"\", " + bezeroKodea + ", "+ "\""+ DateFormat.getDateTimeInstance() + ", "+"\"" +
+					egunKop+", " +  "\"" + DateFormat.getTimeInstance(egunKop) + "\";";
+			Statement st= (Statement) Conexion.createStatement();
+			((java.sql.Statement) st).executeQuery(Query);
+			JOptionPane.showMessageDialog(null, "Alokairua ondo gauzatu da");
 		}catch(SQLException ex){
-			
+			JOptionPane.showConfirmDialog(null, "Barkatu, baina zure alokairua ezin izan da gauzatu.");
 		}
 	}
 }

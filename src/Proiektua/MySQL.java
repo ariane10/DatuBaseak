@@ -2,22 +2,21 @@ package Proiektua;
 
 import java.beans.Statement;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.JOptionPane;
-//import com.mysql.jdbc.Connection;
-//import com.mysql.jdbc.Statement;
 
 public class MySQL {
 	
 	private static Connection Conexion;
 
-
+	/*********************MySQL KONEXIOA EZARTZEKO*********************/
+	
 	public void mySQLConnection(String user, String pass, String db_name) throws Exception{  //KONEXIOA EZARRI
 		try{
 			Class.forName("com.mysql.jdbc.Driver");
@@ -255,12 +254,12 @@ public class MySQL {
 		
         //Bezeroa========================================================
 		try {
-            Query = "SELECT * FROM BEZERO" + /*Asteriskoa jartzen da bezero horren informazio osoa nahi dugulako*/
-							" WHERE KODEA=" + "\"" + kodea+ "\";";
+            Query = "SELECT * FROM BEZERO" +
+							" WHERE KODEA=" + kodea+ ";";
             st = (Statement) Conexion.createStatement();
             resultSet = ((java.sql.Statement) st).executeQuery(Query);
             
-            kreditua=resultSet.getInt("KREDITUA"); /*Bezeroak duen kreditua lortzen da*/
+            kreditua=resultSet.getInt("KREDITUA");
  
         } catch (SQLException ex) {
             errorea="Ez da bezeroa aurkitu";
@@ -270,8 +269,8 @@ public class MySQL {
 		//Kotxea==========================================================
 		if(denaOndo){
 			try {
-	            Query = "SELECT * FROM KOTXEA" +	//Kotxearen infoa lortu
-								" WHERE MATRIKULA=" + "\"" + matrikula+ "\";";
+	            Query = "SELECT * FROM KOTXE" +	//Kotxearen infoa lortu
+								" WHERE MATRIKULA=" + matrikula+ ";";
 	            st = (Statement) Conexion.createStatement();
 	            resultSet = ((java.sql.Statement) st).executeQuery(Query);
 
@@ -289,12 +288,11 @@ public class MySQL {
 		if(denaOndo){
 			try {
 	            Query = "SELECT * FROM KARBURANTEMOTA" +
-								" WHERE IZENA=" + "\""+karbMota+ "\";";
+								" WHERE IZENA=" + karbMota+ ";";
 	            st = (Statement) Conexion.createStatement();
 	            resultSet = ((java.sql.Statement) st).executeQuery(Query);
-	            
-	            prezioa=karburanteKop*resultSet.getInt("PREZIOA");
-	            //prezioa=depositoa-karbKop * resultSet.getInt("PREZIOA"); //Prezioa kalkulatu
+	
+	            prezioa=depositoa-karbKop * resultSet.getInt("PREZIOA"); //Prezioa kalkulatu
 	            
 	        } catch (SQLException ex) {
 	        	errorea="Ez da karburantea aurkitu";
@@ -303,55 +301,33 @@ public class MySQL {
 		}
 		//Dirua Aldatu========================================================
 		if(denaOndo){
-			if (depositoa<=karbKop+karburanteKop){
-				if(kreditua>=prezioa){
-					try {
-						Query="UPDATE BEZEROA SET KREDITUA=" + (kreditua-prezioa) +
-								" WHERE KODEA=" + kodea+ ";";
-			            st = (Statement) Conexion.createStatement();
-			            resultSet = ((java.sql.Statement) st).executeQuery(Query);
-			            
-			        } catch (SQLException ex) {
-			        	errorea="Ezin izan da dirua aldatu";
-			            denaOndo=false;
-			        }
-					
-					try {
-						Query="UPDATE KOTXE SET KARBURANTEKOP=" + karburanteKop +
-								" WHERE MATRIKULA=" + "\"" +matrikula+ "\";";
-			            resultSet = ((java.sql.Statement) st).executeQuery(Query);
-			            
-			        } catch (SQLException ex) {
-			        	errorea="Ezin izan da karburantea aldatu";
-			            denaOndo=false;
-			        }
-				}else{
-					errorea="Ez duzu diru nahikorik";	
-				}
-			}else{
-				errorea="Karburante gehigi bota nahi duozu. Depositoa txikiagoa da.";
-			}
+			if(kreditua>=prezioa){
+				try {
+					Query="UPDATE BEZEROA SET KREDITUA=" + (kreditua-prezioa) +
+							" WHERE KODEA=" + kodea+ ";";
+		            st = (Statement) Conexion.createStatement();
+		            resultSet = ((java.sql.Statement) st).executeQuery(Query);
+		            
+		        } catch (SQLException ex) {
+		        	errorea="Ezin izan da dirua aldatu";
+		            denaOndo=false;
+		        }
+				
+				try {
+					Query="UPDATE KOTXE SET KARBURANTEKOP=" + depositoa +
+							" WHERE MATRIKULA=" + matrikula+ ";";
+		            resultSet = ((java.sql.Statement) st).executeQuery(Query);
+		            
+		        } catch (SQLException ex) {
+		        	errorea="Ezin izan da karburantea aldatu";
+		            denaOndo=false;
+		        }
+			}else errorea="Ez du diru nahikorik";			
 		}
-		if(!denaOndo){JOptionPane.showMessageDialog(null,errorea);}
-			
-	}
-	
-	
-	public void kotxeBatAlokatu(String matrikula, int bezeroKodea, int egunKop){
-		try{
-			String Query="INSERT INTO ALOKATUTA VALUES(" +
-					"\""+matrikula+"\", " + bezeroKodea + ", "+ "\""+ DateFormat.getDateTimeInstance() + ", "+"\"" +
-					egunKop+", " +  "\"" + DateFormat.getTimeInstance(egunKop) + "\";";
-			Statement st= (Statement) Conexion.createStatement();
-			((java.sql.Statement) st).executeQuery(Query);
-			JOptionPane.showMessageDialog(null, "Alokairua ondo gauzatu da");
-		}catch(SQLException ex){
-			JOptionPane.showConfirmDialog(null, "Barkatu, baina zure alokairua ezin izan da gauzatu.");
-		}
+		if(!denaOndo){	JOptionPane.showMessageDialog(null,errorea);}
 	}
 }
 
 	//public void insert
 	//public void getValues
 	//public void deleteRecord
-

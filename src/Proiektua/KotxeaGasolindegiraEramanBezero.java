@@ -67,7 +67,7 @@ public class KotxeaGasolindegiraEramanBezero extends JFrame {
 		JButton btnGorde = new JButton("Gorde");
 		btnGorde.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				MySQL db = new MySQL();
+				MySQL db = MySQL.getMySQL();
 				db.bezeroakKotxeaGasolindegiraEraman(kodea, textField.getText(), Integer.parseInt(comboBox.getName()));
 			}
 		});

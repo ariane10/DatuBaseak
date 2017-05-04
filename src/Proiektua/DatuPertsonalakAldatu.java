@@ -85,7 +85,7 @@ public class DatuPertsonalakAldatu extends JFrame {
 		JButton btnGorde = new JButton("Gorde");
 		btnGorde.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				MySQL db = new MySQL();
+				MySQL db = MySQL.getMySQL();
 				db.datuPertsonalakAldatu(kodea, passwordField.getText(), textField_3.getText(), textField_1.getText(), textField_2.getText());
 			}
 		});

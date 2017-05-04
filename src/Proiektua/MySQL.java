@@ -399,7 +399,7 @@ public class MySQL {
 			}
 			if (denaOndo){
 				try{
-					java.util.Date data = new Date();
+					java.util.Date data = new Date();//curdate()????
 					int eguna = data.getDay();
 					int hilabetea = data.getMonth();
 					int urtea = data.getYear();

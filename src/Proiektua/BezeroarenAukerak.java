@@ -16,7 +16,7 @@ import java.awt.event.ActionEvent;
 public class BezeroarenAukerak extends JFrame {
 
 	private JPanel contentPane;
-	private MySQL db = new MySQL();
+	private MySQL db = MySQL.getMySQL();
 
 	/**
 	 * Launch the application.

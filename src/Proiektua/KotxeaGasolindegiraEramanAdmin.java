@@ -60,7 +60,7 @@ public class KotxeaGasolindegiraEramanAdmin extends JFrame {
 		JButton btnGasolindegira = new JButton("Gorde");
 		btnGasolindegira.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				MySQL db = new MySQL();
+				MySQL db = MySQL.getMySQL();
 				db.kotxeaGasolindegiraEraman(textField.getText());
 			}
 		});

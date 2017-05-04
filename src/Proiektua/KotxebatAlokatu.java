@@ -66,7 +66,7 @@ public class KotxebatAlokatu extends JFrame {
 		JButton btnAlokatu = new JButton("Alokatu");
 		btnAlokatu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				MySQL db = new MySQL();
+				MySQL db = MySQL.getMySQL();
 				db.kotxeBatAlokatu(textField.getText(), kodea, Integer.parseInt(textField_1.getText()));
 			}
 		});

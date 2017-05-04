@@ -27,7 +27,7 @@ public class Window extends JFrame {
 					e.printStackTrace();
 				}
 			}
-		});
+		}); 
 	}
 
 	/**

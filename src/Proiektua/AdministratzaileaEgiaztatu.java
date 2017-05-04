@@ -29,7 +29,7 @@ public class AdministratzaileaEgiaztatu extends JFrame {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			}
+			} 
 		});
 	}
 

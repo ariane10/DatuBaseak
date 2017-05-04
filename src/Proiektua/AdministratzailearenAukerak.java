@@ -27,7 +27,7 @@ public class AdministratzailearenAukerak extends JFrame {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			}
+			} 
 		});
 	}
 

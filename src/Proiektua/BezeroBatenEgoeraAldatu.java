@@ -28,7 +28,7 @@ public class BezeroBatenEgoeraAldatu extends JFrame {
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
-				}
+				} 
 			}
 		});
 	}

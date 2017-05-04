@@ -30,7 +30,7 @@ public class KotxebatAlokatu extends JFrame {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			}
+			} 
 		});
 	}
 

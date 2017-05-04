@@ -30,7 +30,7 @@ public class KredituaGehitu extends JFrame {
 					e.printStackTrace();
 				}
 			}
-		});
+		}); 
 	}
 
 	/**

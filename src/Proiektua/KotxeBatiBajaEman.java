@@ -29,7 +29,7 @@ public class KotxeBatiBajaEman extends JFrame {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			}
+			} 
 		});
 	}
 

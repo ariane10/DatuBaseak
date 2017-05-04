@@ -76,7 +76,7 @@ public class KredituaGehitu extends JFrame {
 		btnGorde.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				MySQL db = new MySQL();
-				db.kredituGehitu(kodea, comboBox.getSelectedIndex());
+				db.kredituGehitu(db.getBezeroKodea(), comboBox.getSelectedIndex());
 			}
 		});
 		btnGorde.setBounds(154, 160, 117, 29);

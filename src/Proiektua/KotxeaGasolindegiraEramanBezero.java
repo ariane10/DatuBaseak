@@ -14,7 +14,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class KotxeaGasolindegiraEraman extends JFrame {
+public class KotxeaGasolindegiraEramanBezero extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textField;
@@ -26,7 +26,7 @@ public class KotxeaGasolindegiraEraman extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					KotxeaGasolindegiraEraman frame = new KotxeaGasolindegiraEraman();
+					KotxeaGasolindegiraEramanBezero frame = new KotxeaGasolindegiraEramanBezero();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -38,7 +38,7 @@ public class KotxeaGasolindegiraEraman extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public KotxeaGasolindegiraEraman() {
+	public KotxeaGasolindegiraEramanBezero() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();

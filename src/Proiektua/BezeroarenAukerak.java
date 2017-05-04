@@ -68,7 +68,7 @@ public class BezeroarenAukerak extends JFrame {
 		JButton btnNewButton = new JButton("Kotxea gasolindegira eraman");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				KotxeaGasolindegiraEraman gasolindegia = new KotxeaGasolindegiraEraman();
+				KotxeaGasolindegiraEramanBezero gasolindegia = new KotxeaGasolindegiraEramanBezero();
 				gasolindegia.setVisible(true);
 			}
 		});

@@ -5,6 +5,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -79,6 +82,20 @@ public class MySQL {
 		return kodea;
 	}
 
+	public String pasahitzaSortu(){
+		char [] elementuak={'0','1','2','3','4','5','6','7','8','9' ,'a',
+				'b','c','d','e','f','g','h','i','j','k','l','m','n','ñ','o','p','q','r','s','t',
+				'u','v','w','x','y','z'};
+		char[] multzoa=new char[8];
+		String pass;
+		for (int i=0;i<8;i++){
+			int el =(int)(Math.random()*37);
+			multzoa[i]=(char) elementuak[el];
+		}
+		pass=new String(multzoa);
+		System.out.println(pass);
+		return pass;
+	}
 	
 	/************ADMINISTRATZAILEAREN ZATIA************/
 	
@@ -325,6 +342,86 @@ public class MySQL {
 			}else errorea="Ez du diru nahikorik";			
 		}
 		if(!denaOndo){	JOptionPane.showMessageDialog(null,errorea);}
+	}
+	
+	public void kotxeBatAlokatu(String matrikula, String bezeroKodea, int egunKop){
+		int egunPrezioa=0, kreditua=0;
+		String errorea="ezer";
+		boolean denaOndo=true;
+		
+		String Query="MySQL-rako komandoak";
+		Statement st=null;
+		java.sql.ResultSet resultSet;
+		
+		//Kotxea badagoen lortu
+		try{
+			Query = "SELECT * FROM KOTXEA WHERE EGOERA=\"Librea\" AND "
+					+ "MATRIKULA=" + "\"" + matrikula +"\";";
+			st= (Statement) Conexion.createStatement();
+			resultSet=((java.sql.Statement) st).executeQuery(Query);
+			egunPrezioa=resultSet.getInt("EGUNPREZIOA");
+		}catch(SQLException ex){
+			errorea="Ez dago matrikula hori daukan kotxerik.";
+			denaOndo=false;
+		}
+		if (denaOndo){
+			try{
+				Query="SELECT * FROM BEZEROA WHERE KODEA="
+						+ bezeroKodea+ " AND EGOERA=1"+";";
+				st=(Statement) Conexion.createStatement();
+				resultSet=((java.sql.Statement) st).executeQuery(Query);
+				kreditua=resultSet.getInt("KREDITUA");
+			}catch(SQLException ex){
+				errorea="Ezin kode hau duen bezeroa bajan dago.";
+				denaOndo=false;
+			}
+		}
+		if (denaOndo){
+			if (kreditua>=(egunPrezioa*egunKop)){
+				try{
+					Query="UPDATE BEZEROA SET KREDITUA=" + (egunPrezioa*egunKop)+
+					"WHERE KODEA=" + bezeroKodea+";";
+					st=(Statement) Conexion.createStatement();
+					resultSet=((java.sql.Statement) st).executeQuery(Query);
+				}catch(SQLException ex){
+					errorea="Ezin izan da zure kreditua aldatu";
+					denaOndo=false;
+				}
+			}
+			if (denaOndo){
+				try{
+					Query="UPDATE KOTEA SET EGOERA=\"Alokatuta\" WHERE MATRIKULA="
+							+ "\"" + matrikula + "\";";
+					st=(Statement) Conexion.createStatement();
+					resultSet=((java.sql.Statement) st).executeQuery(Query);
+				}catch(SQLException ex){
+					errorea="Ezin izan da kotxearen egoera aldatu. Barkatu eragozpenak.";
+					denaOndo=false;
+				}
+			}
+			if (denaOndo){
+				try{
+					java.util.Date data = new Date();
+					int eguna = data.getDay();
+					int hilabetea = data.getMonth();
+					int urtea = data.getYear();
+					Calendar dataGehituta = Calendar.getInstance();
+					dataGehituta.setTime(data);
+					dataGehituta.add(Calendar.DAY_OF_YEAR, egunKop);
+					/*eguna = dataGehituta.
+					hilabetea = dataGehituta.getMonth();
+					urtea = dataGehituta.getYear();*/
+					Query="INSERT INTO ALOKATUA VALUES(\"" + matrikula+ "\", "
+							+ bezeroKodea +", " + "\""+urtea+"-"+hilabetea+"-"+eguna+"\", "
+							+ egunKop + ", " + "\"" /*hemen gehitu*/ ;
+					st=(Statement) Conexion.createStatement();
+					resultSet=((java.sql.Statement) st).executeQuery(Query);
+				}catch(SQLException ex){
+					errorea="Barkatu baina, ezin izan duzu alokatu aukeratutako kotxea. Barkatu eragozpenak.";
+					denaOndo=false;
+				}
+			}
+		}	
 	}
 }
 

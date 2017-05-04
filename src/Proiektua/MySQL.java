@@ -67,13 +67,6 @@ public class MySQL {
 	}*/
 
 	//BIHAR GALDETU
-	public int binary (boolean egoera){
-		int emaitza=0;
-		if (egoera){
-			emaitza=1;
-		}
-		return emaitza;
-	}
 	
 	//BIHAR GALDETU
 	public int kodeaSortu(){
@@ -105,7 +98,7 @@ public class MySQL {
 			String Query = "INSERT INTO " + "BEZEROA" + "VALUES" +
 					"(" + kodeaSortu() + ", " +"\"" +pasahitza+"\"" + ", " + 
 					"\"" + izena + "\"" + " ," + "\"" + abizena + "\"" +
-					", " + "\"" + helbidea + "\"" + ", " + binary(true) + DateFormat.getTimeInstance() 
+					", " + "\"" + helbidea + "\"" + ", " + true + ""
 					+ ", " +kreditua + ");";
 			Statement st =  (Statement) Conexion.createStatement();
 			((java.sql.Statement) st).executeUpdate(Query);

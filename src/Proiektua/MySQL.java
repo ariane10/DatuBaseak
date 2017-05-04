@@ -15,12 +15,25 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class MySQL {
-	
+
+	private static MySQL nMySQL;
 	private static Connection Conexion;
 
 	/*********************MySQL KONEXIOA EZARTZEKO*********************/
-	
-	public void mySQLConnection(String user, String pass, String db_name) throws Exception{  //KONEXIOA EZARRI
+	public static MySQL getMySQL(){
+		if(nMySQL==null) main();
+		return nMySQL;
+	}
+	private static void main(){   //METODO NAGUSIA
+		nMySQL= new MySQL();
+		try {
+			nMySQL.mySQLConnection("root", "", "");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	private void mySQLConnection(String user, String pass, String db_name) throws Exception{  //KONEXIOA EZARRI
 		try{
 			Class.forName("com.mysql.jdbc.Driver");
 			Conexion = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/" + db_name, user, pass);
@@ -42,15 +55,7 @@ public class MySQL {
 	}
 	
 	
-	public static void main(String[] args){   //METODO NAGUSIA
-		MySQL db = new MySQL();
-		try {
-			db.mySQLConnection("root", "", "");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+
 
 	/*public void createDB(String Proiektua){   //DATU BASEA SORTU
 		try{
